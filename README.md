@@ -1,4 +1,4 @@
-# SyntheticICUAugmentation — RECOMB27
+# ICUPrivacyAudit — RECOMB27
 
 Code for **Privacy auditing with measured detection floors for generative models of ICU trajectories** submitted for review at RECOMB 2027.
 

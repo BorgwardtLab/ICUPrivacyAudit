@@ -4,7 +4,7 @@ Code for **Privacy auditing with measured detection floors for generative models
 
 This repository contains the training, generation and evaluation workflows used for the paper: quantile-token and continuous time series generators, clinical mortality prediction, and privacy audits of released weights and synthetic cohorts.
 
-![Figure 1](docs/figures/figure_1.pdf)
+![Figure 1](docs/figures/figure_1.png)
 
 Figure 1. Overview of the framework: ICU trajectory tokenization, generator training, and privacy auditing of released model weights and synthetic cohorts, with measured detection floors for both release
 scenarios.

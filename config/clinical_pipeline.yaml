@@ -1,0 +1,22 @@
+defaults:
+  - clinical_source@source: continuous_nonshuffled
+  - _self_
+
+metadata_path: data/metadata.parquet
+real_time_origin: icu_admission
+generation_mode: "null"
+output_dir: outputs/clinical_utility/${source.name}/${generation_mode}
+task_index: 0
+action: run
+seed: 42
+threads: 4
+# Fail rather than allocate unbounded grids for malformed duration metadata.
+hours_max: 9000
+release_size: 12000
+release_positives: 840
+classifier_overrides: {}
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: ${output_dir}/hydra/${task_index}

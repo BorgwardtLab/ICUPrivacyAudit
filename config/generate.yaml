@@ -1,0 +1,69 @@
+# @package _global_
+
+defaults:
+  - _self_
+  - datamodule: icuall # name of the yaml file with the spec of the dataset you want to use, should be in the datamodule folder
+  - paths: local # auto-detect cluster and user
+
+seed: 0
+
+trainer:
+  _target_: lightning.Trainer
+  accelerator: auto
+  precision: bf16-true
+  strategy: auto
+  # trainer.test runs on one GPU even when generation uses several (sampling.gpu_count):
+  # with devices=auto and several visible GPUs, Lightning would start a DDP run.
+  devices: 1
+  default_root_dir: ${logs.path}
+  num_sanity_val_steps: 0
+
+sampling:
+  num_samples_per_class: 12000 # number of samples to generate per class
+  use_real_prevalence: true
+  positive_fraction: 0.07 # Shared paper release: exactly 840 positive stays out of 12000.
+  max_new_tokens: 5000
+  output_attentions: false # if True, output the attention weights
+  output_scores: true # if True, output the scores of the generated tokens
+  num_beams: 1 # if > 1, use beam search to generate samples, otherwise use greedy decoding
+  batch_size: 512
+  # GPUs to split the corpus's batches across (the first gpu_count visible ones).
+  # The corpus is identical for any count; each GPU runs one worker process.
+  gpu_count: 1
+  temperature: 1.0
+  enforce_single_feature_per_timepoint: true # if True, enforce that each feature appears at most once per timepoint
+  include_demographics: true # if True, generate demographics (sex, age, height, weight) at the start of each sequence
+  #use_logits_processor: true # if True, use the logits processor to filter out tokens that are not allowed
+  use_chunking: true # if True, use chunking to generate samples of stays lasting more than datamodule.truncation_time 
+  from_data: "test" # if "train", generate samples from the training set, if "test", generate samples from the test set
+  cfg_scale: 1.0
+  gen_demo: tvae # Tabular demographic model used by the discrete generator.
+  model_demo_path: null # ${paths.data_root}/demo_generator/${sampling.gen_demo}.pkl # specify path to the pretrained model checkpoint for generating demographics when running
+  center_id: null # if not null, specify the center id to generate samples for: 1 for miiv 0 for eicu
+  center_strategy: "null" # if center_id is null, specify the strategy to use for sampling from the centers, either "balanced" or "null"
+  output_tag: discrete_Q5_null # corpus is saved as generated_samples_<output_tag>.joblib, logits as logits_<output_tag>.joblib
+
+
+model:
+  _target_: syntheticicu.model_gap.get_llama_model
+  model_name: llama-xs
+  pretrained_path: null # specify path to the pretrained model checkpoint when running
+
+# corpora audited by scripts/run_privacy_audit_ext.py (attack C, canary, seeds).
+# Override these two corpus paths for the release being audited.
+privacy:
+  gen_cond_path: inputs/discrete_shuffled/Q5/conditioned.joblib
+  gen_null_path: inputs/discrete_shuffled/Q5/null.joblib
+
+logs:
+  prefix: ${paths.logs.generate}/${datamodule.dataset_name}/${model.model_name}/${seed}
+  path: ${logs.prefix}/runs/${now:%Y-%m-%d}_${now:%H-%M-%S}
+
+
+# output directory, generated dynamically on each run
+hydra:
+  run:
+    dir: ${logs.path}
+  sweep:
+    dir: ${logs.prefix}/multiruns/train/${now:%Y-%m-%d}_${now:%H-%M-%S}
+    subdir: ${hydra.job.num}

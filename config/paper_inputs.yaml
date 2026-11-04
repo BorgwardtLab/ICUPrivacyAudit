@@ -1,0 +1,8 @@
+hparams: inputs/hparams.yaml
+dataset_path: null
+output_dir: inputs
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: outputs/paper/input_preparation

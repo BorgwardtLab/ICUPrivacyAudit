@@ -1,0 +1,26 @@
+defaults:
+  - numerical_full
+  - _self_
+output_dir: outputs/paper/continuous
+data:
+  split_manifest: ${oc.env:PAPER_SPLITS,inputs/generator_splits.parquet}
+  split_unit: reference_stay
+  trim_empty_boundaries: true
+  weight_overrides: null
+train:
+  shuffle_within_hour: false
+  devices: 8
+  accumulate_grad_batches: 2
+  val_check_interval: 250
+generate:
+  num_samples: 12000
+  positive_fraction: 0.07
+  batch_size: 64
+  trim_empty_trails: true
+parallel:
+  shard_count: 6
+  shard_index: 0
+distributed:
+  num_nodes: 1
+  expected_effective_batch: 512
+  require_fresh_marker: false

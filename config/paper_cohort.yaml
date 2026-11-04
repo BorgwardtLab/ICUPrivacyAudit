@@ -1,0 +1,8 @@
+dataset_path: data/discrete_Q5.pkl
+metadata_path: data/metadata.parquet
+output_dir: outputs/paper/cohort
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: ${output_dir}/hydra

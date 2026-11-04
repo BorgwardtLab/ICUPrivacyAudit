@@ -1,0 +1,6 @@
+name: continuous_nonshuffled
+representation: numerical
+num_bins: 5
+roots:
+  "null": outputs/paper/continuous
+  conditioned: outputs/paper/continuous/conditioned

@@ -1,0 +1,31 @@
+# Private inputs and generated artifacts.
+/data/
+/inputs/
+/outputs/
+/logs/
+/lightning_logs/
+/wandb/
+/full_pipeline/
+/bin_sweep/
+/worktrees/
+*.ckpt
+*.joblib
+*.parquet
+*.pkl
+*.pt
+*.pickle
+*.log
+*.out
+*.err
+# Local environments and caches.
+.venv
+.env
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.hypothesis/
+*.egg-info/
+/dist/
+/build/
+# Local planning documents.
+/docs/recomb27/

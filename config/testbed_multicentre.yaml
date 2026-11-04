@@ -1,0 +1,34 @@
+# Second memorisation testbed: multi-centre, sweeping the outcome (label) dropout.
+#
+# Fixes the two gaps of the first, single-centre grid (testbed.yaml):
+#   - cal_center was untestable with one centre: every row had the same centre id,
+#     so the true and null centre embeddings were two constant offsets.
+#   - cal_class depends on label_dropout, which was fixed at 0.1 throughout.
+#
+# Four centres, balanced to the same total patients as the first grid (25,000:
+# 4 x 6,250, split train/val/test with the datamodule's fractions), so the
+# training cost stays the same. center_dropout_prob is fixed at the audited
+# model's value (0.3, from its hparams.yaml). miiv and mimic share patients
+# (MIMIC-IV overlaps MIMIC-III), so only one of them is used.
+#
+#   python scripts/run_privacy_audit_ext.py testbed_multicentre --testbed
+# Run independent grid points in separate allocations.
+
+defaults:
+  - testbed
+  - _self_
+
+testbed:
+  centers: [miiv, eicu, hirid, aumc]
+  patients_per_center: 6250
+  samples: null                      # replaced by the per-centre balancing above
+  n_canaries: 200
+  dup_factors: [20, 50]
+  center_dropout_prob_sweep: [0.3]   # the audited model's value
+  label_dropout_sweep: [0.0, 0.1, 0.3]
+
+trainer:
+  max_steps: 12000
+
+logs:
+  prefix: ${paths.logs.train}/testbed_multicentre/${model.model_name}/${seed}

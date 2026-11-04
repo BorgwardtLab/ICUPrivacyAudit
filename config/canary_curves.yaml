@@ -1,0 +1,17 @@
+action: prepare
+representation: discrete
+factor: 5
+factors: [5, 20, 50]
+count: 500
+seed: 0
+output_dir: outputs/paper/canaries
+reference_splits: inputs/generator_splits.parquet
+discrete_hparams: inputs/hparams.yaml
+continuous_root: outputs/paper/continuous
+batch_size: 32
+num_workers: 0
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: ${output_dir}/hydra/${representation}_${action}_${factor}

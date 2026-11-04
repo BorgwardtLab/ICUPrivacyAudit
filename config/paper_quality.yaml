@@ -1,0 +1,15 @@
+defaults:
+  - _self_
+output_dir: outputs/paper/quality
+metadata_path: data/metadata.parquet
+release_size: 12000
+# Entries: {representation: discrete_shuffled, q: 5, mode: "null", kind: discrete, path: inputs/generated.joblib}
+# Numerical path is the release directory containing model.pt and generated/.
+corpora: []
+# Entries: {q: 5, path: data/discrete_Q5.pkl}
+real_sources: []
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: ${output_dir}/hydra

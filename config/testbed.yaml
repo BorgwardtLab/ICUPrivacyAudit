@@ -1,0 +1,37 @@
+# Memorisation testbed (positive control for the privacy audit).
+# Composes from train.yaml so trainer, optimizer and scheduler settings are the
+# real ones, then shrinks the run: one centre, a capped number of stays, one GPU,
+# few steps. This is a control, not a model we care about.
+#
+#   python scripts/run_privacy_audit_ext.py testbed --testbed
+#   python scripts/run_privacy_audit_ext.py testbed --testbed \
+#       testbed.dup_factors=[1,5,20,50] testbed.center_dropout_prob_sweep=[0.0,0.1,0.3]
+
+defaults:
+  - train
+  - _self_
+
+wandb: false
+
+testbed:
+  center: miiv               # must be a key of CENTRE_MAP
+  samples: 25000             # stays kept after the centre filter (null = all)
+  n_canaries: 200
+  dup_factors: [50]          # full grid: [1, 5, 20, 50]
+  center_dropout_prob_sweep: [0.1]   # full grid: [0.0, 0.1, 0.3]
+
+trainer:
+  max_steps: 3000
+  max_epochs: -1
+  val_check_interval: 1000
+  log_every_n_steps: 50
+  strategy: auto
+  devices: 1
+  accumulate_grad_batches: 1
+
+model:
+  _target_: syntheticicu.model_gap.get_llama_model   # same architecture as the audited model
+  model_name: llama-xs
+
+logs:
+  prefix: ${paths.logs.train}/testbed/${testbed.center}/${model.model_name}/${seed}

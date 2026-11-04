@@ -1,0 +1,8 @@
+data_root: ${oc.env:PAPER_DATA,data}
+project_root: ${hydra:runtime.cwd}
+logs_root: outputs/paper
+data:
+  icuall: ${paths.data_root}/discrete_Q5.pkl
+logs:
+  train: ${paths.logs_root}/discrete/train
+  generate: ${paths.logs_root}/discrete/generate

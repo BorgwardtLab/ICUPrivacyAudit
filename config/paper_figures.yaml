@@ -1,0 +1,13 @@
+defaults:
+  - _self_
+figure: all
+results_root: outputs/paper/exports
+quality_root: outputs/paper/quality
+output_dir: outputs/paper/figures
+representations: [discrete_shuffled, discrete_fixed, continuous]
+primary_statistics: [cal_class, raw, raw]
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: ${output_dir}/hydra

@@ -1,0 +1,9 @@
+{
+  "description": "Entirely artificial ICU records; no real patient was used or perturbed.",
+  "seed": 7,
+  "stays": 40,
+  "hours_per_stay": 48,
+  "centers": ["miiv", "eicu"],
+  "features": ["hr_raw", "temp_raw"],
+  "outcomes": [0, 1]
+}

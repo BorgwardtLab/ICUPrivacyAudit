@@ -1,0 +1,7 @@
+name: discrete_nonshuffled
+representation: discrete
+num_bins: 5
+real_path: data/discrete_Q5.pkl
+synthetic_paths:
+  "null": inputs/discrete_fixed/Q5/null.joblib
+  conditioned: inputs/discrete_fixed/Q5/conditioned.joblib

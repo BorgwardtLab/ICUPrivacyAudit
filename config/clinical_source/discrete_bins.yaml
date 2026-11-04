@@ -1,0 +1,7 @@
+name: discrete_shuffled_K${source.num_bins}
+representation: discrete
+num_bins: 2
+real_path: data/discrete_Q${source.num_bins}.pkl
+synthetic_paths:
+  "null": inputs/discrete_shuffled/Q${source.num_bins}/null.joblib
+  conditioned: inputs/discrete_shuffled/Q${source.num_bins}/conditioned.joblib

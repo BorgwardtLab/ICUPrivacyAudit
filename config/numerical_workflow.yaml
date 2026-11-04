@@ -1,0 +1,75 @@
+defaults:
+  - numerical_model@model
+  - _self_
+
+action: prepare
+seed: 42
+output_dir: outputs/numerical_workflow
+overwrite: false
+
+data:
+  core_path: data/core.parquet
+  meta_path: data/metadata.parquet
+  split_manifest: null # optional parquet: centre, stay_id, split (train/val/test)
+  split_unit: patient # reference_stay explicitly replays the legacy stay partitions
+  trim_empty_boundaries: false
+  centers: [miiv, eicu, mimic, sic, aumc, hirid]
+  features: [hr_raw, resp_raw, sbp_raw, dbp_raw, map_raw, temp_raw, o2sat_raw, urine_raw]
+  demographics: [female_static, age_static, height_static, weight_static]
+  max_patients: 1024 # initial pilot; null selects the full population
+  max_hours: 24
+  min_hours: 0
+  normalize_urine_by_weight: false
+  max_tokens: 512
+  num_bins: 5 # repeated edges collapse; constant physiology fails explicitly
+  out_of_range: clip # clip to training bounds and report counts; or error
+  val_fraction: 0.1
+  test_fraction: 0.2
+  seed: ${seed}
+
+train:
+  shuffle_within_hour: true
+  batch_size: 8
+  num_workers: 0
+  max_steps: 1000
+  accelerator: gpu
+  devices: 1
+  strategy: auto
+  accumulate_grad_batches: 1
+  max_epochs: -1
+  gradient_clip_val: 0.0
+  deterministic: true
+  precision: 32-true
+  limit_val_batches: 1.0
+  learning_rate: 0.001
+  weight_decay: 0.01
+  betas: [0.9, 0.999]
+  warmup_steps: 0
+  scheduler_steps: null
+  checkpoint_every_n_steps: 1000
+  resume: false
+  log_every_n_steps: 100
+  val_check_interval: 1.0
+  check_val_every_n_epoch: 1
+  n_canaries: 0
+  duplication_factor: 1
+
+generate:
+  num_samples: 120
+  batch_size: 4
+  max_new_tokens: 256
+  temperature: 1.0
+  device: cuda
+  center: null # null center embedding; otherwise one of data.centers
+  positive_fraction: 0.5
+  min_hours: 1
+
+evaluate:
+  max_hours: 24
+  logistic_c: 1.0
+
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: ${output_dir}/hydra/${action}

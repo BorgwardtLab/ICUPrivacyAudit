@@ -1,0 +1,19 @@
+defaults:
+  - _self_
+output_dir: outputs/paper/exports
+seed: 0
+utility_bootstraps: 2000
+# Each entry: {name: unique_label, path: local_saved_artifact}
+# Saved inputs must be trusted: joblib/pickle loading executes Python objects.
+utility: []
+discrete_audits: []
+numerical_audits: []
+canaries: []
+replication: []
+value_corpus: []
+recovery_extensions: []
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: ${output_dir}/hydra

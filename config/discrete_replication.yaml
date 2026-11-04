@@ -1,0 +1,22 @@
+defaults:
+  - _self_
+action: prepare
+representation: shuffled
+generation_mode: "null"
+output_root: outputs/discrete_replication
+reference_splits: inputs/generator_splits.parquet
+reference_hparams: inputs/hparams.yaml
+seed: 0
+max_candidates_per_cell: 140
+sources:
+  shuffled:
+    "null": inputs/discrete_shuffled/Q5/null.joblib
+    conditioned: inputs/discrete_shuffled/Q5/conditioned.joblib
+  fixed:
+    "null": inputs/discrete_fixed/Q5/null.joblib
+    conditioned: inputs/discrete_fixed/Q5/conditioned.joblib
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: ${output_root}/hydra/${action}_${representation}_${generation_mode}

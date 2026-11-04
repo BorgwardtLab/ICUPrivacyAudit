@@ -1,0 +1,11 @@
+output_dir: outputs/paper/continuous
+evaluation_dir: ${output_dir}/pipeline_evaluation
+overwrite: false
+privacy:
+  score_kind: categorical # numerical scores continuous value density instead of bin probability.
+  device: cuda
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: ${evaluation_dir}/hydra/likelihood_${privacy.score_kind}

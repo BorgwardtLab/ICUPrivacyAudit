@@ -1,0 +1,32 @@
+defaults:
+  - numerical_smoke
+  - _self_
+specification: examples/toy_spec.json
+output_dir: outputs/example
+data:
+  max_patients: null
+  max_hours: null
+  min_hours: 6
+  max_tokens: 128
+  num_bins: 5
+  demographics: [female_static, age_static, height_static, weight_static]
+  split_unit: patient
+  val_fraction: 0.2
+  test_fraction: 0.2
+train:
+  batch_size: 4
+  devices: 1
+  accumulate_grad_batches: 1
+  max_steps: 2
+  max_epochs: 2
+  accelerator: cpu
+  strategy: auto
+  precision: 32-true
+  limit_val_batches: 1
+  val_check_interval: 1.0
+  check_val_every_n_epoch: 1
+  warmup_steps: 0
+generate:
+  num_samples: 8
+  max_new_tokens: 24
+  positive_fraction: 0.5

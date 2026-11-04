@@ -1,0 +1,6 @@
+defaults:
+  - numerical_matched
+  - _self_
+action: train
+canary_factor: 5
+output_dir: outputs/paper/canaries/continuous/dup${canary_factor}_n500

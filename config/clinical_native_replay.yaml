@@ -1,0 +1,10 @@
+defaults:
+  - clinical_pipeline
+  - override clinical_source@source: continuous_matched
+  - _self_
+output_dir: outputs/paper/utility_native_replay/${source.name}/${generation_mode}
+
+preflight: false
+
+reference_utility_root: outputs/clinical_utility/discrete_shuffled
+recovery_core_path: data/core.parquet

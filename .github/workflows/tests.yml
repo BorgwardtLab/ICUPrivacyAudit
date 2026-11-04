@@ -1,0 +1,34 @@
+name: repository tests
+
+on:
+  pull_request:
+  push:
+    branches: [RECOMB27]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      POETRY_VIRTUALENVS_IN_PROJECT: "true"
+      OMP_NUM_THREADS: "2"
+      MKL_NUM_THREADS: "2"
+      NUMBA_NUM_THREADS: "2"
+      SYNTHETICICU_RUNTIME_ROOT: ${{ runner.temp }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Poetry
+        run: pipx install poetry==2.3.2
+      - name: Install locked project dependencies
+        run: poetry install --with dev --no-interaction
+      - name: Run repository suite
+        run: poetry run python scripts/check_numerical_model.py quack
+      - name: Run artificial CPU example
+        run: poetry run python scripts/paper_example.py

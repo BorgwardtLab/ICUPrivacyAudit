@@ -1,0 +1,107 @@
+defaults:
+  - numerical_workflow
+  - _self_
+
+# Reference: config/train.yaml, config/datamodule/icuall.yaml, and the recorded
+# gap/llama-xs/demo-on/time-on/shuffle-on binned run. The numerical head is new.
+seed: 0
+output_dir: outputs/paper/continuous
+data:
+  max_patients: null
+  max_hours: null
+  min_hours: 6
+  normalize_urine_by_weight: true
+  max_tokens: 3000
+  seed: 42
+  val_fraction: 0.05
+  test_fraction: 0.2
+  features:
+    - alb_raw
+    - alp_raw
+    - alt_raw
+    - ast_raw
+    - basos_raw
+    - be_raw
+    - bicar_raw
+    - bildir_raw
+    - bili_raw
+    - bnd_raw
+    - bun_raw
+    - ca_raw
+    - cai_raw
+    - ck_raw
+    - cl_raw
+    - crea_raw
+    - crp_raw
+    - dbp_raw
+    - eos_raw
+    - esr_raw
+    - etco2_raw
+    - fgn_raw
+    - fio2_raw
+    - glu_raw
+    - hbco_raw
+    - hct_raw
+    - hgb_raw
+    - hr_raw
+    - inrpt_raw
+    - k_raw
+    - lact_raw
+    - lymph_raw
+    - map_raw
+    - mch_raw
+    - mchc_raw
+    - mcv_raw
+    - methb_raw
+    - mg_raw
+    - na_raw
+    - neut_raw
+    - o2sat_raw
+    - pco2_raw
+    - ph_raw
+    - phos_raw
+    - plt_raw
+    - po2_raw
+    - pt_raw
+    - ptt_raw
+    - rbc_raw
+    - rdw_raw
+    - resp_raw
+    - sbp_raw
+    - tco2_raw
+    - temp_raw
+    - tnt_raw
+    - tri_raw
+    - urine_raw
+    - wbc_raw
+model:
+  config:
+    hidden_size: 512
+    intermediate_size: 2048
+    num_hidden_layers: 6
+    num_attention_heads: 8
+    num_key_value_heads: 8
+    rms_norm_eps: 0.00001
+    attention_dropout: 0.33657881463675005
+train:
+  batch_size: 32
+  num_workers: 0
+  devices: 8
+  strategy: ddp_find_unused_parameters_true
+  accumulate_grad_batches: 2
+  max_steps: 200000
+  max_epochs: 100
+  precision: bf16-mixed # retain float32 numerical bounds and density evaluation
+  learning_rate: 0.0021649915375620173
+  weight_decay: 0.04739107925821598
+  betas: [0.9, 0.95]
+  gradient_clip_val: 0.11856150495414686
+  deterministic: false
+  warmup_steps: 2000
+  scheduler_steps: 200000
+  resume: true
+  val_check_interval: 1000
+  check_val_every_n_epoch: null
+generate:
+  num_samples: 12000
+  max_new_tokens: 3000

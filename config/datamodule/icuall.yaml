@@ -1,0 +1,20 @@
+_target_: syntheticicu.data_classes.ICUDatamodule # this is the class that you want to use to instantiate your object
+data_path: ${paths.data.icuall}
+pretrain: true
+tokenize: true
+batch_size: 32
+num_workers: 8
+min_length: 6 # minimum stay length to keep before tokenization
+max_length: null #null #300 # maximum number of direct FIDDLE timesteps kept per stay
+max_gap: 6 # maximum allowed gap parameter forwarded to ICUDataset
+samples: null # optional number of stays to sample after filtering
+ids_to_keep: null # optional explicit stay/patient IDs to retain
+# demo: true # whether to use a small subset of the data for quick testing
+# demo_fraction: 0.01 # if demo is true, what fraction of the data to use
+truncation_time: 3000  # how many tokens of data to truncate to (if stay > this, a random chunk of this length will be used)
+dataset_name: icuall # name of the dataset, used for logging
+shuffle_tokens_within_timepoint: true # whether to shuffle the order of tokens within each timepoint for data augmentation
+add_time_point_positional_embeddings: true # whether to add time point positional embeddings to tokens
+return_label: death_icu
+p_shuffle: 1 # probability of shuffling timepoints within a sample for data augmentation
+include_demographics: true # whether to include demographics (sex, age, height, weight) at the start of each sequence
